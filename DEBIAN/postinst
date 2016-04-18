@@ -1,0 +1,56 @@
+#!/bin/sh
+case "$1" in
+    configure)
+	adduser --quiet --system --shell /bin/bash --home /var/lib/plexmediaserver plex
+	update-rc.d plexmediaserver defaults
+	/etc/init.d/plexmediaserver stop
+
+	PMS_LIB_DIR=/usr/lib/plexmediaserver
+	PMS_DOWNLOAD_DIR=/tmp/plex_tmp_download	
+
+	PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.16.4.1911-ee6e505/plexmediaserver-ros6-binaries-annapurna_0.9.16.4.1911-ee6e505_armel.deb'
+	PMS_HASH='1a9da86a0810b5c7a18ad31a195c1c781bce904826ba1d963ccad7e1a85dda9b'
+
+	# create tmp folder
+	mkdir -p $PMS_DOWNLOAD_DIR	
+
+	echo "Downloading readynas package ..."
+	cd $PMS_DOWNLOAD_DIR	
+	curl --progress-bar -o readynas.deb $PMS_URL
+
+	PMS_DOWNLOAD_HASH=`sha256sum readynas.deb | cut -d' ' -f1`
+
+	if [ "$PMS_HASH" != "$PMS_DOWNLOAD_HASH" ]
+	then
+		echo "Checksum mismatch. Downloaded file does not match this package."
+		exit 1
+	else
+		echo "Passed checksum test."
+	fi
+
+	echo "Extracting readynas.deb ..."
+        ar p readynas.deb data.tar.gz | tar -xzf - -C $PMS_LIB_DIR/ --strip-components=4 ./apps/plexmediaserver-annapurna/Binaries
+
+	# remove not used files
+	rm $PMS_LIB_DIR/config.xml
+
+	cd /tmp
+
+	# remove tmp data
+	rm -r $PMS_DOWNLOAD_DIR/
+
+	#!/bin/sh
+
+	/etc/init.d/plexmediaserver start
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0

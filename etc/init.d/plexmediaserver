@@ -1,0 +1,66 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          plexmediaserver
+# Required-Start:    $remote_fs $syslog $networking
+# Required-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Plex Media Server
+# Description:       Plex Media Server for Linux,
+#                    More information at http://www.plexapp.com
+#                    Many thanks to the great PlexApp team for their wonderfull job !
+# Author:            Cedric Quillevere / origin@killy.net
+# Rewamped	     Christian Svedin / christian.svedin@gmail.com
+# Version:           1.2
+### END INIT INFO
+
+# Read configuration variable file if it is present
+[ -r /etc/default/plexmediaserver ] && . /etc/default/plexmediaserver
+
+test -f "/usr/lib/plexmediaserver/start.sh" || exit 0
+
+plex_running=`ps ax | grep "\./Plex Media Server" | awk '{ print $1 }' | wc -l`
+
+case "$1" in
+    start)
+	if [ "$plex_running" -gt 1 ]; then
+		echo "Plex already running..."
+		exit 0
+	fi
+	echo -n "Starting Plex Media Server: "
+	su -l $PLEX_MEDIA_SERVER_USER -c "/usr/sbin/start_pms &" >/dev/null 2>&1
+	sleep 1
+	echo "done"
+	;;
+    stop)
+	if [ "$plex_running" -eq 1 ]; then
+		echo "Plex Media Server is not running (no process found)..."
+		exit 0
+	fi
+	echo -n "Killing Plex Media Server: "
+	# Trying to kill the Plex Media Server itself but also the Plug-ins
+	ps ax | grep "Plex Media Server" | awk '{ print $1 }' | xargs kill -9 >/dev/null 2>&1
+	ps ax | grep "Plex Plug-in" | awk '{ print $1 }' | xargs kill -9 >/dev/null 2>&1
+	ps ax | grep "Plex DLNA Server" | awk '{ print $1 }' | xargs kill -9 >/dev/null 2>&1
+	sleep 1
+	echo "done"
+	;;
+    restart)
+	sh $0 stop
+	sh $0 start
+	;;
+    status)
+        if [ "$plex_running" -gt 1 ]; then
+                echo "Plex Media Server process running."
+	else
+		echo "It seems that Plex Media Server isn't running (no process found)."
+        fi
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+	;;
+esac
+
+exit 0
+
