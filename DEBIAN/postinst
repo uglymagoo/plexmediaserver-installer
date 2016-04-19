@@ -1,24 +1,30 @@
-#!/bin/sh
-case "$1" in
-    configure)
-	adduser --quiet --system --shell /bin/bash --home /var/lib/plexmediaserver plex
-	update-rc.d plexmediaserver defaults
-	/etc/init.d/plexmediaserver stop
+#!/bin/bash
 
-	PMS_LIB_DIR=/usr/lib/plexmediaserver
-	PMS_DOWNLOAD_DIR=/tmp/plex_tmp_download	
+PMS_LIB_DIR=/usr/lib/plexmediaserver
+PMS_DOWNLOAD_DIR=/tmp/plex_tmp_download	
 
-	PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.16.4.1911-ee6e505/plexmediaserver-ros6-binaries-annapurna_0.9.16.4.1911-ee6e505_armel.deb'
-	PMS_HASH='1a9da86a0810b5c7a18ad31a195c1c781bce904826ba1d963ccad7e1a85dda9b'
+get_pms_build(){
 
-	# create tmp folder
-	mkdir -p $PMS_DOWNLOAD_DIR	
+	local cpuinfo=$(grep Features /proc/cpuinfo)
+	if [[ $cpuinfo =~ .*neon.* ]] && [[ $cpuinfo =~ .*vfpv4.* ]] && [[ $cpuinfo =~ .*thumb.* ]] && [[ $cpuinfo =~ .*idiva.* ]]; then
+		echo "netgear"		
+	elif [[ $cpuinfo =~ .*neon.* ]]; then
+		echo "synology_neon"
+	else
+		echo "synology"
+	fi
+}
+
+install_netgear(){
+
+	local PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.16.4.1911-ee6e505/plexmediaserver-ros6-binaries-annapurna_0.9.16.4.1911-ee6e505_armel.deb'
+	local PMS_HASH='1a9da86a0810b5c7a18ad31a195c1c781bce904826ba1d963ccad7e1a85dda9b'
 
 	echo "Downloading readynas package ..."
 	cd $PMS_DOWNLOAD_DIR	
 	curl --progress-bar -o readynas.deb $PMS_URL
 
-	PMS_DOWNLOAD_HASH=`sha256sum readynas.deb | cut -d' ' -f1`
+	local PMS_DOWNLOAD_HASH=`sha256sum readynas.deb | cut -d' ' -f1`
 
 	if [ "$PMS_HASH" != "$PMS_DOWNLOAD_HASH" ]
 	then
@@ -33,10 +39,65 @@ case "$1" in
 
 	# remove not used files
 	rm $PMS_LIB_DIR/config.xml
+	
+}
 
-	cd /tmp
+install_synology(){
+
+	local PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.16.4.1911-ee6e505/PlexMediaServer-0.9.16.4.1911-ee6e505-arm7.spk'
+	local PMS_HASH='ffa8a84248cfbc48b5d844b40f9263d17cb191b19098f5055e4f0561317f4b97'
+
+	if [[ $1 == "synology_neon" ]]; then
+		PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.16.4.1911-ee6e505/PlexMediaServer-0.9.16.4.1911-ee6e505-neon-armv7.spk'
+		PMS_HASH='c29e44e6d0f6ad8e43f49a08dda43f127acf119149f4ae65adc631cfb719b24c'
+	fi
+
+	echo "Downloading synology package ..."
+	cd $PMS_DOWNLOAD_DIR	
+	curl --progress-bar -o synology.tar $PMS_URL
+
+	local PMS_DOWNLOAD_HASH=`sha256sum synology.tar | cut -d' ' -f1`
+
+	if [ "$PMS_HASH" != "$PMS_DOWNLOAD_HASH" ]
+	then
+		echo "Checksum mismatch. Downloaded file does not match this package."
+		exit 1
+	else
+		echo "Passed checksum test."
+	fi
+
+	echo "Extracting synology.tar ..."
+        tar -xOf synology.tar package.tgz | tar -xzf - -C $PMS_LIB_DIR/
+
+	# remove not used files
+	rm -r $PMS_LIB_DIR/dsm_config
+	if [ -e $PMS_LIB_DIR/ld-linux.so.3 ]
+	then
+		rm $PMS_LIB_DIR/ld-linux.so.3
+	fi
+	
+}
+
+
+case "$1" in
+    configure)
+	adduser --quiet --system --shell /bin/bash --home /var/lib/plexmediaserver plex
+	update-rc.d plexmediaserver defaults
+	/etc/init.d/plexmediaserver stop
+
+	# create tmp folder
+	mkdir -p $PMS_DOWNLOAD_DIR	
+
+	pmsbuild=$(get_pms_build)
+
+	if [[ $pmsbuild == "netgear" ]]; then
+		install_netgear
+	else
+		install_synology $pmsbuild
+	fi
 
 	# remove tmp data
+	cd /tmp
 	rm -r $PMS_DOWNLOAD_DIR/
 
 	#!/bin/sh
