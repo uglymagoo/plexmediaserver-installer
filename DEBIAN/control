@@ -1,5 +1,5 @@
 Package: plexmediaserver-installer
-Version: 0.9.16.4.1911-ee6e505-15~jessie
+Version: 0.9.16.5.1911-ee6e505-1~jessie
 Depends: libc6 (>= 2.19), curl, binutils
 Replaces: plexmediaserver (<< 0.9.16.4.1911-ee6e505)
 Breaks: plexmediaserver (<< 0.9.16.4.1911-ee6e505)
