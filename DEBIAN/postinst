@@ -85,8 +85,9 @@ case "$1" in
 	update-rc.d plexmediaserver defaults
 	/etc/init.d/plexmediaserver stop
 
-	# create tmp folder
+	# create dirs 
 	mkdir -p $PMS_DOWNLOAD_DIR	
+	mkdir -p $PMS_LIB_DIR
 
 	pmsbuild=$(get_pms_build)
 

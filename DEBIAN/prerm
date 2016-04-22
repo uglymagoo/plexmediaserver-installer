@@ -3,4 +3,4 @@
 
 PMS_LIB_DIR=/usr/lib/plexmediaserver
 
-rm -rf $PMS_LIB_DIR/*
+rm -rf $PMS_LIB_DIR
