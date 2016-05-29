@@ -17,8 +17,6 @@
 # Read configuration variable file if it is present
 [ -r /etc/default/plexmediaserver ] && . /etc/default/plexmediaserver
 
-test -f "/usr/lib/plexmediaserver/start.sh" || exit 0
-
 plex_running=`ps ax | grep "\./Plex Media Server" | awk '{ print $1 }' | wc -l`
 
 case "$1" in
