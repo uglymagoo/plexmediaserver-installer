@@ -35,7 +35,7 @@ install_netgear(){
 	fi
 
 	echo "Extracting readynas.deb ..."
-        dpkg-deb --fsys-tarfile readynas.deb | tar -xzf - -C $PMS_LIB_DIR/ --strip-components=4 ./apps/plexmediaserver-annapurna/Binaries
+        dpkg-deb --fsys-tarfile readynas.deb | tar -xf - -C $PMS_LIB_DIR/ --strip-components=4 ./apps/plexmediaserver-annapurna/Binaries
 
 	# remove not used files
 	rm $PMS_LIB_DIR/config.xml
