@@ -1,9 +1,8 @@
 Package: plexmediaserver-installer
-Version: 0.9.16.6.1993-5089475-1~jessie
-Depends: libc6 (>= 2.19), curl, binutils
-Replaces: plexmediaserver (<< 0.9.16.4.1911-ee6e505)
-Breaks: plexmediaserver (<< 0.9.16.4.1911-ee6e505)
-Conflicts: plexmediaserver-neonless-installer
+Version: 0.9.17.0.2108-356c3af-1~jessie
+Depends: libc6 (>= 2.19), curl
+Replaces: plexmediaserver (<< 0.9.16.4.1911-ee6e505), plexmediaserver-installer-neonless (<< 0.9.16.4.1911-ee6e505-6) 
+Breaks: plexmediaserver (<< 0.9.16.4.1911-ee6e505), plexmediaserver-installer-neonless (<< 0.9.16.4.1911-ee6e505-6)
 Architecture: armhf
 Maintainer: Jan Friedrich (uglymagoo) <jft@dev2day.de>
 Section: video
