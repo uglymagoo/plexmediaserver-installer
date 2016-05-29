@@ -101,7 +101,8 @@ case "$1" in
 	cd /tmp
 	rm -r $PMS_DOWNLOAD_DIR/
 
-	#!/bin/sh
+	# fix web profile
+	sed -i 's/name="audio.channels" value="6"/name="audio.channels" value="2"/g' /usr/lib/plexmediaserver/Resources/Profiles/Web.xml
 
 	/etc/init.d/plexmediaserver start
     ;;
