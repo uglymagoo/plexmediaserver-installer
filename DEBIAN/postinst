@@ -8,8 +8,6 @@ get_pms_build(){
 	local cpuinfo=$(grep Features /proc/cpuinfo)
 	if [[ $cpuinfo =~ .*neon.* ]] && [[ $cpuinfo =~ .*vfpv4.* ]] && [[ $cpuinfo =~ .*thumb.* ]] && [[ $cpuinfo =~ .*idiva.* ]]; then
 		echo "netgear"		
-	elif [[ $cpuinfo =~ .*neon.* ]]; then
-		echo "synology_neon"
 	else
 		echo "synology"
 	fi
@@ -17,8 +15,8 @@ get_pms_build(){
 
 install_netgear(){
 
-	local PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.17.2.2159-2bd156c/plexmediaserver-ros6-binaries-annapurna_0.9.17.2.2159-2bd156c_armel.deb'
-	local PMS_HASH='ebb5b0a04790ed9e2035f45ebfc518ec74003fe77c535ba39e7f968a055a582d'
+	local PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.17.3.2239-fe07491/plexmediaserver-ros6-binaries-annapurna_0.9.17.3.2239-fe07491_armel.deb'
+	local PMS_HASH='471f83833376f06ea6d57e3571e7826661483f57ddbb4a5cea217a85a92c01ad'
 
 	echo "Downloading readynas package ..."
 	cd $PMS_DOWNLOAD_DIR	
@@ -44,13 +42,8 @@ install_netgear(){
 
 install_synology(){
 
-	local PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.17.2.2159-2bd156c/PlexMediaServer-0.9.17.2.2159-2bd156c-arm7.spk'
-	local PMS_HASH='c079b63da090660231b18226b5a1c14d1810f30b428fa987e2f26a2ed39515bd'
-
-	if [[ $1 == "synology_neon" ]]; then
-		PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.17.2.2159-2bd156c/PlexMediaServer-0.9.17.2.2159-2bd156c-neon-armv7.spk'
-		PMS_HASH='dc8b073f0caffd1803ebfab9a266bbb6f28db713ecbb2720d7d480898b28c63d'
-	fi
+	local PMS_URL='https://downloads.plex.tv/plex-media-server/0.9.17.3.2239-fe07491/PlexMediaServer-0.9.17.3.2239-fe07491-arm7.spk'
+	local PMS_HASH='8052caada4dca35e272a306b5519ea3f4980f9b13b0bd3fb049dfc0d73d68533'
 
 	echo "Downloading synology package ..."
 	cd $PMS_DOWNLOAD_DIR	
@@ -71,11 +64,6 @@ install_synology(){
 
 	# remove not used files
 	rm -r $PMS_LIB_DIR/dsm_config
-	if [ -e $PMS_LIB_DIR/ld-linux.so.3 ]
-	then
-		rm $PMS_LIB_DIR/ld-linux.so.3
-	fi
-	
 }
 
 
@@ -94,7 +82,7 @@ case "$1" in
 	if [[ $pmsbuild == "netgear" ]]; then
 		install_netgear
 	else
-		install_synology $pmsbuild
+		install_synology
 	fi
 
 	# remove tmp data
