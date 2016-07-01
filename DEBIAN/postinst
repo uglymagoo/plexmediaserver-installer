@@ -92,6 +92,9 @@ case "$1" in
 	# fix web profile
 	sed -i 's/name="audio.channels" value="6"/name="audio.channels" value="2"/g' /usr/lib/plexmediaserver/Resources/Profiles/Web.xml
 
+	# fix chromecast profile
+	sed -i 's/name="audio.channels" value="6"/name="audio.channels" value="2"/g' /usr/lib/plexmediaserver/Resources/Profiles/Chromecast.xml
+
 	/etc/init.d/plexmediaserver start
     ;;
 
