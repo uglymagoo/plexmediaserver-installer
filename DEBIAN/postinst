@@ -5,9 +5,12 @@ PMS_DOWNLOAD_DIR=/tmp/plex_tmp_download
 
 get_pms_build(){
 
-	local cpuinfo=$(grep Features /proc/cpuinfo)
+	local cpuinfo=$(grep -i features /proc/cpuinfo)
+	local cpuarch=$(grep -i architecture /proc/cpuinfo | cut -d' ' -f3 | head -n1)
 	if [[ $cpuinfo =~ .*neon.* ]] && [[ $cpuinfo =~ .*vfpv4.* ]] && [[ $cpuinfo =~ .*thumb.* ]] && [[ $cpuinfo =~ .*idiva.* ]]; then
 		echo "netgear"		
+	elif [[ $cpuarch == "8" ]]; then
+		echo "netgear"
 	else
 		echo "synology"
 	fi
