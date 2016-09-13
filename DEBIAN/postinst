@@ -18,8 +18,8 @@ get_pms_build(){
 
 install_netgear(){
 
-	local PMS_URL='https://downloads.plex.tv/plex-media-server/1.1.3.2700-6f64a8d/plexmediaserver-ros6-binaries-annapurna_1.1.3.2700-6f64a8d_armel.deb'
-	local PMS_HASH='a15837a557859b52c45926df84f94957fc662a7d2fb2b245627202a621f0932a'
+	local PMS_URL='https://downloads.plex.tv/plex-media-server/1.1.4.2757-24ffd60/plexmediaserver-ros6-binaries-annapurna_1.1.4.2757-24ffd60_armel.deb'
+	local PMS_HASH='8b3f847836ee1c08a44d342978f41fa5d7a6302ac3250b48d1d838d1fb158751'
 
 	echo "Downloading readynas package ..."
 	cd $PMS_DOWNLOAD_DIR	
@@ -45,8 +45,8 @@ install_netgear(){
 
 install_synology(){
 
-	local PMS_URL='https://downloads.plex.tv/plex-media-server/1.1.3.2700-6f64a8d/PlexMediaServer-1.1.3.2700-6f64a8d-arm7.spk'
-	local PMS_HASH='530aa2583876e765ce0d0e4c98e5629e14589d3ada004e03cd61cc1df4fc1bc7'
+	local PMS_URL='https://downloads.plex.tv/plex-media-server/1.1.4.2757-24ffd60/PlexMediaServer-1.1.4.2757-24ffd60-arm7.spk'
+	local PMS_HASH='67467bf2469a10e3155ad6cc98e15ccc5ad8f06ea559baf4359fc057c947ac18'
 
 	echo "Downloading synology package ..."
 	cd $PMS_DOWNLOAD_DIR	
