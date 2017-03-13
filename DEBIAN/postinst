@@ -7,7 +7,9 @@ get_pms_build(){
 
 	local cpuinfo=$(grep -i features /proc/cpuinfo)
 	local cpuarch=$(grep -i architecture /proc/cpuinfo | cut -d' ' -f3 | head -n1)
-	if [[ $cpuinfo =~ .*neon.* ]] && [[ $cpuinfo =~ .*vfpv4.* ]] && [[ $cpuinfo =~ .*thumb.* ]] && [[ $cpuinfo =~ .*idiva.* ]]; then
+	if [[ -e /etc/plexmediaserver/forcesynology ]]; then
+		echo "synology"
+	elif [[ $cpuinfo =~ .*neon.* ]] && [[ $cpuinfo =~ .*vfpv4.* ]] && [[ $cpuinfo =~ .*thumb.* ]] && [[ $cpuinfo =~ .*idiva.* ]]; then
 		echo "netgear"		
 	elif [[ $cpuarch == "8" ]]; then
 		echo "netgear"
