@@ -7,7 +7,17 @@ get_pms_build(){
 
 	local cpuinfo=$(grep -i features /proc/cpuinfo)
 	local cpuarch=$(grep -i architecture /proc/cpuinfo | cut -d' ' -f3 | head -n1)
-	if [[ $cpuinfo =~ .*neon.* ]] && [[ $cpuinfo =~ .*vfpv4.* ]] && [[ $cpuinfo =~ .*thumb.* ]] && [[ $cpuinfo =~ .*idiva.* ]]; then
+
+	local bios_board_vendor=""
+	if [[ -e /sys/class/dmi/id/board_vendor ]]; then
+		bios_board_vendor=$(cat /sys/class/dmi/id/board_vendor)
+	elif [[ -e /sys/devices/virtual/dmi/id/board_vendor ]]; then
+		bios_board_vendor=$(cat /sys/devices/virtual/dmi/id/board_vendor)
+	fi
+
+	if [[ $bios_board_vendor == "AMD" ]]; then
+		echo "synology"
+	elif [[ $cpuinfo =~ .*neon.* ]] && [[ $cpuinfo =~ .*vfpv4.* ]] && [[ $cpuinfo =~ .*thumb.* ]] && [[ $cpuinfo =~ .*idiva.* ]]; then
 		echo "netgear"		
 	elif [[ $cpuarch == "8" ]]; then
 		echo "netgear"
