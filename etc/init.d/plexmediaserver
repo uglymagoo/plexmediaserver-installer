@@ -37,9 +37,15 @@ case "$1" in
 	fi
 	echo -n "Killing Plex Media Server: "
 	# Trying to kill the Plex Media Server itself but also the Plug-ins
-	ps ax | grep "Plex Media Server" | awk '{ print $1 }' | xargs kill -9 >/dev/null 2>&1
-	ps ax | grep "Plex Plug-in" | awk '{ print $1 }' | xargs kill -9 >/dev/null 2>&1
-	ps ax | grep "Plex DLNA Server" | awk '{ print $1 }' | xargs kill -9 >/dev/null 2>&1
+	ps ax | grep "Plex Media Server" | awk '{ print $1 }' | xargs kill -15 >/dev/null 2>&1
+	ps ax | grep "Plex Plug-in" | awk '{ print $1 }' | xargs kill -15 >/dev/null 2>&1
+	ps ax | grep "Plex DLNA Server" | awk '{ print $1 }' | xargs kill -15 >/dev/null 2>&1
+	ps ax | grep "Plex Tuner Service" | awk '{ print $1 }' | xargs kill -15 >/dev/null 2>&1
+	ps ax | grep "Plex Media Scanner" | awk '{ print $1 }' | xargs kill -15 >/dev/null 2>&1
+	ps ax | grep "Plex DLNA Server" | awk '{ print $1 }' | xargs kill -15 >/dev/null 2>&1
+	ps ax | grep "Plex Relay" | awk '{ print $1 }' | xargs kill -15 >/dev/null 2>&1
+	ps ax | grep "Plex Transcoder" | awk '{ print $1 }' | xargs kill -15 >/dev/null 2>&1
+	ps ax | grep "Plex Script Host" | awk '{ print $1 }' | xargs kill -15 >/dev/null 2>&1
 	sleep 1
 	echo "done"
 	;;
