@@ -33,7 +33,7 @@ install_netgear(){
 
 	echo "Downloading readynas package ..."
 	cd $PMS_DOWNLOAD_DIR	
-	curl --progress-bar -o readynas.deb $PMS_URL
+	curl --progress-bar -C - -o readynas.deb $PMS_URL
 
 	local PMS_DOWNLOAD_HASH=`sha256sum readynas.deb | cut -d' ' -f1`
 
@@ -60,7 +60,7 @@ install_synology(){
 
 	echo "Downloading synology package ..."
 	cd $PMS_DOWNLOAD_DIR	
-	curl --progress-bar -o synology.tar $PMS_URL
+	curl --progress-bar -C - -o synology.tar $PMS_URL
 
 	local PMS_DOWNLOAD_HASH=`sha256sum synology.tar | cut -d' ' -f1`
 
