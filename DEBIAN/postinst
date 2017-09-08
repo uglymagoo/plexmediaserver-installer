@@ -82,9 +82,7 @@ install_synology(){
 
 case "$1" in
     configure)
-	adduser --quiet --system --shell /bin/bash --home /var/lib/plexmediaserver plex
-	update-rc.d plexmediaserver defaults
-	/etc/init.d/plexmediaserver stop
+	adduser --quiet --system --shell /bin/bash --home /var/lib/plexmediaserver --group plex plex
 
 	# create dirs 
 	mkdir -p $PMS_DOWNLOAD_DIR	
@@ -102,13 +100,42 @@ case "$1" in
 	cd /tmp
 	rm -r $PMS_DOWNLOAD_DIR/
 
-	# fix web profile
-	# sed -i 's/name="audio.channels" value="6"/name="audio.channels" value="2"/g' /usr/lib/plexmediaserver/Resources/Profiles/Web.xml
+	# Ensure we load the udevrule and trigger for any already inserted USB device
+	if [ -f /sbin/udevadm ]; then
+	  udevadm control --reload-rules || :
+	  udevadm trigger
+	else
+	  echo
+	  echo "##################################################################"
+	  echo "#  NOTE: Your system does not have udev installed. Without udev  #"
+	  echo "#        you won't be able to use DVBLogic's TVButler for DVR    #"
+	  echo "#        or for LiveTV                                           #"
+	  echo "#                                                                #"
+	  echo "#        Please install udev and reinstall Plex Media Server to  #"
+	  echo "#        to enable TV Butler support in Plex Media Server.       #"
+	  echo "#                                                                #"
+	  echo "#        To install udev run: sudo apt-get install udev          #"
+	  echo "#                                                                #"
+	  echo "##################################################################"
+	  echo
+	fi
 
-	# fix chromecast profile
-	# sed -i 's/name="audio.channels" value="6"/name="audio.channels" value="2"/g' /usr/lib/plexmediaserver/Resources/Profiles/Chromecast.xml
-
-	/etc/init.d/plexmediaserver start
+	if [ -f /proc/1/comm ]; then
+	  if [ "`cat /proc/1/comm`" = "systemd" ]; then
+	    rm -f /etc/init.d/plexmediaserver
+	    # Initiate config consolidation and pull overrides into the correct location.
+	    if [ ! -f /usr/lib/plexmediaserver/.migrated ]; then
+	      /usr/lib/plexmediaserver/MigratePlexServerConfig.sh
+	      # Add migrated check file
+	      touch /usr/lib/plexmediaserver/.migrated
+	    fi
+	    systemctl enable plexmediaserver
+	    systemctl start plexmediaserver
+	  else
+	    update-rc.d plexmediaserver defaults
+	    /etc/init.d/plexmediaserver start
+	  fi
+	fi
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
