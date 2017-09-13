@@ -82,7 +82,11 @@ install_synology(){
 
 case "$1" in
     configure)
-	adduser --quiet --system --shell /bin/bash --home /var/lib/plexmediaserver --group plex plex
+	adduser --quiet --system --shell /bin/bash --home /var/lib/plexmediaserver --group plex
+
+	# fix missing plex group in the old package
+	addgroup --quiet --system plex
+	usermod -g plex plex &> /dev/null
 
 	# create dirs 
 	mkdir -p $PMS_DOWNLOAD_DIR	
@@ -122,13 +126,13 @@ case "$1" in
 
 	if [ -f /proc/1/comm ]; then
 	  if [ "`cat /proc/1/comm`" = "systemd" ]; then
-	    rm -f /etc/init.d/plexmediaserver
 	    # Initiate config consolidation and pull overrides into the correct location.
 	    if [ ! -f /usr/lib/plexmediaserver/.migrated ]; then
 	      /usr/lib/plexmediaserver/MigratePlexServerConfig.sh
 	      # Add migrated check file
 	      touch /usr/lib/plexmediaserver/.migrated
 	    fi
+	    systemctl daemon-reload
 	    systemctl enable plexmediaserver
 	    systemctl start plexmediaserver
 	  else

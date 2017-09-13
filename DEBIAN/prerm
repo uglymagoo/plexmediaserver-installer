@@ -4,7 +4,7 @@ if [ -f /proc/1/comm ] && [ "`cat /proc/1/comm`" = "systemd" ];
 then
 	systemctl stop plexmediaserver
 	systemctl disable plexmediaserver
-	rm -f /etc/init.d/plexmediaserver
+	/etc/init.d/plexmediaserver stop
 else
 	/etc/init.d/plexmediaserver stop
 fi
