@@ -1,5 +1,13 @@
 #!/bin/sh
-/etc/init.d/plexmediaserver stop
+
+if [ -f /proc/1/comm ] && [ "`cat /proc/1/comm`" = "systemd" ];
+then
+	systemctl stop plexmediaserver
+	systemctl disable plexmediaserver
+	rm -f /etc/init.d/plexmediaserver
+else
+	/etc/init.d/plexmediaserver stop
+fi
 
 PMS_LIB_DIR=/usr/lib/plexmediaserver
 
