@@ -127,10 +127,8 @@ case "$1" in
 	if [ -f /proc/1/comm ]; then
 	  if [ "`cat /proc/1/comm`" = "systemd" ]; then
 	    # Initiate config consolidation and pull overrides into the correct location.
-	    if [ ! -f /usr/lib/plexmediaserver/.migrated ]; then
+	    if [ -f /etc/default/plexmediaserver ]; then
 	      /usr/lib/plexmediaserver/MigratePlexServerConfig.sh
-	      # Add migrated check file
-	      touch /usr/lib/plexmediaserver/.migrated
 	    fi
 	    systemctl daemon-reload
 	    systemctl enable plexmediaserver

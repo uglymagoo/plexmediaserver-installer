@@ -151,7 +151,7 @@ UpdateConfig() {
       PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR=`eval echo ~$PLEX_MEDIA_SERVER_USER`
       PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="$PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR/Library/Application Support"
     fi 
-  else
+  elif [ "$PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR" = "" ]; then
       PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="/var/lib/plexmediaserver/Library/Application Support"
   fi
 
@@ -166,7 +166,9 @@ UpdateConfig() {
     NewTmp="$PLEX_MEDIA_SERVER_TMPDIR"
     Debug User changed TMPDIR to $NewTmp
   fi
-  
+ else
+   # no configuration to migrate
+   exit 0
  fi
 
 # Step 2 - SYSTEM - Get the base variables from the as-distributed service file (modified ?)
@@ -322,7 +324,8 @@ EOT
     Debug Override   Group= "$Group"
     echo "Group=$Group" >> $Override
   fi
-
+ else
+  rm $Override
  fi
  
 
