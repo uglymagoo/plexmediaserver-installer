@@ -8,7 +8,6 @@
 # OverrideDir   - where we will be putting the new configuration information
 
 # Define the PMS core default variables.  Needed to detect changes from defaults
-PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="/var/lib/plexmediaserver/Library/Application Support"
 PLEX_MEDIA_SERVER_HOME="/usr/lib/plexmediaserver"
 
 # Initialize variables and process flags
@@ -143,6 +142,19 @@ UpdateConfig() {
   . "$Temp"
 
   # Copy over ONLY what is important
+  if [ $PLEX_MEDIA_SERVER_USER != plex ]; then
+    ChangedUser=1
+    ChangedGroup=1
+    NewUser=$PLEX_MEDIA_SERVER_USER
+    NewGroup=$PLEX_MEDIA_SERVER_USER
+    if [ "$PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR" = "" ]; then
+      PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR=`eval echo ~$PLEX_MEDIA_SERVER_USER`
+      PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="$PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR/Library/Application Support"
+    fi 
+  else
+      PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR="/var/lib/plexmediaserver/Library/Application Support"
+  fi
+
   if [ "$PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR" != "/var/lib/plexmediaserver/Library/Application Support" ]; then
     ChangedApp=1;
     NewAppSupport="$PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR"
@@ -154,12 +166,7 @@ UpdateConfig() {
     NewTmp="$PLEX_MEDIA_SERVER_TMPDIR"
     Debug User changed TMPDIR to $NewTmp
   fi
-  if [ $PLEX_MEDIA_SERVER_USER != plex ]; then
-    ChangedUser=1
-    ChangedGroup=1
-    NewUser=$PLEX_MEDIA_SERVER_USER
-    NewGroup=$PLEX_MEDIA_SERVER_USER
-  fi
+  
  fi
 
 # Step 2 - SYSTEM - Get the base variables from the as-distributed service file (modified ?)
@@ -218,54 +225,8 @@ UpdateConfig() {
 
  ServiceOverride="/etc/systemd/system/plexmediaserver.service.d/override.conf"
  OverrideDir="`dirname $ServiceOverride`"
- if [ -r $ServiceOverride ]; then
-  # Move old /etc/systemd/system/plexmediaserver.service out of the way if there, we now use /lib/systemd/system/plexmediaserver.service.
-  if [ -f /etc/systemd/system/plexmediaserver.service ]; then
-    mv /etc/systemd/system/plexmediaserver.service /etc/systemd/system/plexmediaserver.service.prev
-    systemctl daemon-reload
-  fi
-  # Exit script as there already is an override.conf file.
-  exit 0
- else
-  ServiceOverride="/etc/systemd/system/plexmediaserver.service"
-  if [ -r $ServiceOverride ]; then
-   HaveOverride=1
-  fi
- fi
 
- Debug HaveOverride = $HaveOverride
- 
  Override="${ServiceOverride}"
-
- Debug Define OverrideDir=$OverrideDir , OverrideFile=$Override
-
- # If the override exists, get only what we care about
- if [ $HaveOverride -eq 1 ]; then
-
-
-   # Pick up Application Support Dir, Temp, User, and Group
-
-   AppSupport="`awk -F'=' '/PLEX_MEDIA_SERVER_APPLICATION_SUPPORT_DIR/ {gsub(/"/,"");print $3}' $ServiceOverride`"
-   Debug Override file APP_SUPPORT = $AppSupport
-
-   # Pick up NewTmp
-   NewTmp="`awk -F'=' '/PLEX_MEDIA_SERVER_TMPDIR/ {gsub(/"/,"");print $3}' $ServiceOverride`"
-   Debug Override file TMPDIR = $NewTmp
-
-   # Find User
-   User="`awk -F'=' '/User/ {gsub(/"/,"");print $2}' $ServiceOverride`"
-   Debug Override file User = $User
-
-   # Find Group
-   Group="`awk -F'=' '/Group/ {gsub(/"/,"");print $2}' $ServiceOverride`"
-   Debug Override File Group = $Group
-
-   # We no longer need the Service Override file
-   # Rename it to prevent future use and abandon in place
-
-   Debug Renamed Serivce Override \"$ServiceOverride\" to \"${Override}.prev\"
-   mv -f $ServiceOverride ${ServiceOverride}.prev
- fi
 
  # We are all done with Temp as well
  rm -f "$Temp"
