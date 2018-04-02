@@ -88,6 +88,9 @@ case "$1" in
 	addgroup --quiet --system plex
 	usermod -g plex plex &> /dev/null
 
+	# add plex to the video group
+	gpasswd -a plex video
+
 	# create dirs 
 	mkdir -p $PMS_DOWNLOAD_DIR	
 	mkdir -p $PMS_LIB_DIR
