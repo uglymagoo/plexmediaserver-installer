@@ -1,5 +1,5 @@
 Package: plexmediaserver-installer
-Version: 1.12.1.4885-1046ba85f-1
+Version: 1.12.2.4929-29f6d1796-1
 Depends: libc6 (>= 2.19), curl
 Replaces: plexmediaserver (<< 0.9.16.4.1911-ee6e505), plexmediaserver-installer-neonless (<< 1.0.0.2261-a17e99e) 
 Breaks: plexmediaserver (<< 0.9.16.4.1911-ee6e505), plexmediaserver-installer-neonless (<< 1.0.0.2261-a17e99e)
