@@ -3,6 +3,7 @@ Version: 1.13.8.5388-509720743-1
 Depends: libc6 (>= 2.19), curl
 Replaces: plexmediaserver (<< 0.9.16.4.1911-ee6e505), plexmediaserver-installer-neonless (<< 1.0.0.2261-a17e99e) 
 Breaks: plexmediaserver (<< 0.9.16.4.1911-ee6e505), plexmediaserver-installer-neonless (<< 1.0.0.2261-a17e99e)
+Conflicts: plexmediaserver (>=1.13.6)
 Architecture: armhf
 Multi-Arch: foreign
 Maintainer: Jan Friedrich (uglymagoo) <jft@dev2day.de>
