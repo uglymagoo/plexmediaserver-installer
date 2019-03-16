@@ -48,9 +48,6 @@ install_netgear(){
 	echo "Extracting readynas.deb ..."
         dpkg-deb --fsys-tarfile readynas.deb | tar -xf - -C $PMS_LIB_DIR/ --strip-components=4 ./apps/plexmediaserver-annapurna/Binaries
 
-	# remove not used files
-	rm $PMS_LIB_DIR/config.xml
-	
 }
 
 install_synology(){
