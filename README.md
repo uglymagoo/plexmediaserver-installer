@@ -1,5 +1,9 @@
 # PMS on Debian armhf and arm64
 
+## Official support
+
+Plex now provides official packages. So, this project is considered EOL by me.
+
 ## What's this all about?
 
 This project can be used to generate a hacky, non-standard compliant Debian package for the armhf and arm64 architecture. It works surprisingly well and fetches the binaries of some NAS builds from the Plex Inc. server.
