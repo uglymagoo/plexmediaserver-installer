@@ -141,6 +141,33 @@ case "$1" in
 	    /etc/init.d/plexmediaserver start
 	  fi
 	fi
+
+	cat <<- EOF
+	##### ATTENTION #####
+
+	Finally, official ARMv7 and ARMv8 Plex packages are available:
+	https://www.plex.tv/media-server-downloads/
+
+	The repo on dev2day.de has nearly reached its end of life. Please
+	upgrade to the official packages as soon as possible. This repository
+	will disappear sometime in the future.
+
+	The migration is simple and your Plex library will be preserved.
+
+	First, remove the dev2day.de package:
+	sudo apt-get remove plexmediaserver-installer
+
+	Then, remove the dev2day.de repo, e.g. with:
+	sudo rm /etc/apt/sources.list.d/pms.list
+
+	Now, download and install the package from plex.tv, e.g.:
+	sudo dpkg -i plexmediaserver_1.15.1.791-8bec0f76c_armhf.deb
+
+	Also, an official Plex repository should  be available soon:
+	https://support.plex.tv/articles/235974187-enable-repository-updating-for-supported-linux-server-distributions/
+
+	####################
+	EOF
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
