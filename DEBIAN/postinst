@@ -157,11 +157,16 @@ case "$1" in
 	Then, remove the dev2day.de repo, e.g. with:
 	sudo rm /etc/apt/sources.list.d/pms.list
 
-	Now, download and install the package from plex.tv, e.g.:
-	sudo dpkg -i plexmediaserver_1.15.1.791-8bec0f76c_armhf.deb
+	Now, download the appropriate package from https://www.plex.tv/media-server-downloads/ and put it on your device, e.g.:
+	wget https://downloads.plex.tv/plex-media-server-new/1.15.2.793-782228f99/debian/plexmediaserver_1.15.2.793-782228f99_armhf.deb
 
-	Also, an official Plex repository should  be available soon:
+	Finally, install the package, e.g.:
+	sudo dpkg -i plexmediaserver_1.15.2.793-782228f99_armhf.deb
+
+	Also, an official Plex repository should be available soon. Most likely, the repo will still NOT work when you read this message!
 	https://support.plex.tv/articles/235974187-enable-repository-updating-for-supported-linux-server-distributions/
+
+	The following thread has more information: https://forums.plex.tv/t/read-me-first-about-server-armv7-and-armv8-ubuntu-debian/226567/
 
 	####################
 	EOF
