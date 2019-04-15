@@ -142,12 +142,10 @@ case "$1" in
 	cat <<- EOF
 	##### ATTENTION #####
 
+	THIS IS THE LAST UPDATE OF THE dev2day.de PACKAGE!!! UPDATE TO THE OFFICIAL PACKAGE NOW!!!
+
 	Finally, official ARMv7 and ARMv8 Plex packages are available:
 	https://www.plex.tv/media-server-downloads/
-
-	The repo on dev2day.de has nearly reached its end of life. Please
-	upgrade to the official packages as soon as possible. This repository
-	will disappear sometime in the future.
 
 	The migration is simple and your Plex library will be preserved.
 
@@ -158,15 +156,17 @@ case "$1" in
 	sudo rm /etc/apt/sources.list.d/pms.list
 
 	Now, download the appropriate package from https://www.plex.tv/media-server-downloads/ and put it on your device, e.g.:
-	wget https://downloads.plex.tv/plex-media-server-new/1.15.2.793-782228f99/debian/plexmediaserver_1.15.2.793-782228f99_armhf.deb
+	wget https://downloads.plex.tv/plex-media-server-new/1.15.3.876-ad6e39743/debian/plexmediaserver_1.15.3.876-ad6e39743_armhf.deb
 
 	Finally, install the package, e.g.:
-	sudo dpkg -i plexmediaserver_1.15.2.793-782228f99_armhf.deb
+	sudo dpkg -i plexmediaserver_1.15.3.876-ad6e39743_armhf.deb
 
-	Also, an official Plex repository should be available soon. Most likely, the repo will still NOT work when you read this message!
+	Also, the official Plex repository is now available:
 	https://support.plex.tv/articles/235974187-enable-repository-updating-for-supported-linux-server-distributions/
 
 	The following thread has more information: https://forums.plex.tv/t/read-me-first-about-server-armv7-and-armv8-ubuntu-debian/226567/
+
+	Post your questions here: https://forums.plex.tv/tags/server-linux-arm
 
 	####################
 	EOF
